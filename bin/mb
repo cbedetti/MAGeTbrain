@@ -32,7 +32,7 @@ STAGE_TAR       = 'mb_tar'         # tar up
 STAGE_REG_MODEL = 'mb_regmodel'    # register model to atlases
 STAGE_MODEL_SUBJECT_DISPLACE = 'mb_model_displace' #compute displacement of model objects
 STAGE_BLURDP = 'mb_blurdp' #compute blurred displacement
-STAGE_MODELPREP = 'mb_modelprep' #autocrop model
+STAGE_MODELPREP = 'mb_modelprep' #autocrop2 model
 STAGE_XFMJOIN_M = 'mb_xfm_join_morpho' #model to subject xfm concat
 STAGE_SUBJECTDISPLACE = 'mb_subjgrid' #calculate transform grid for each subject
 STAGE_SUBJECTGRID_AVG = 'mb_gridavg' #calc avg grid per subject
@@ -807,7 +807,7 @@ class MAGeTBrain(object):
   def stage_imageprep(self):
     """Prep images by handling intensity inhomogeneity, move to model space"""
     commands = []
-    #autocrop the model and place the output in output/modelspace/input/model/
+    #autocrop2 the model and place the output in output/modelspace/input/model/
     newmodel_dir = join(self.options.modelspace_dir,'model')
     mkdirp(newmodel_dir)
    
@@ -816,9 +816,9 @@ class MAGeTBrain(object):
       #res_model is path to new model
       res_model = model.image
       crop_model = join(newmodel_dir, "croppedmodel.mnc")
-      prep_cmd = 'autocrop -from {0} -isostep 1 {0} {1}'.format(res_model, crop_model)
+      prep_cmd = 'autocrop2 -from {0} -isostep 1 {0} {1}'.format(res_model, crop_model)
       if not os.path.exists(crop_model):
-        #prep_cmd = 'autocrop -isostep 1 {0} {1}'.format(model.image, res_model)
+        #prep_cmd = 'autocrop2 -isostep 1 {0} {1}'.format(model.image, res_model)
         commands.append(prep_cmd)
 
       #reset model.template settings to the path of our new model
@@ -1011,7 +1011,7 @@ class MAGeTBrain(object):
         #proc = supbrocess.Popen(["mincinfo", "-attvalue", "xspace:step", "input/subjects/brains/subject1.mnc"])
 
         #self.queue.append_commands(STAGE_XFMJOIN_M, [command])
-        #command = 'autocrop -from {0} -step {1}$(mincinfo -attvalue xspace:step $subject) 
+        #command = 'autocrop2 -from {0} -step {1}$(mincinfo -attvalue xspace:step $subject) 
                   #{2}$(mincinfo -attvalue yspace:step $subject) {3}$(mincinfo -attvalue zspace:step $subject) 
                   #{4} {5}'.format(m.image, xstep, ystep, zstep, m.image, cropmodel)   
   
